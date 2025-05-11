@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1746974618893,
+      "tag": "0000_free_star_brand",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1746977138129,
+      "tag": "0001_spotty_johnny_storm",
+      "breakpoints": true
+    }
+  ]
+}

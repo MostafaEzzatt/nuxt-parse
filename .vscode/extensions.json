@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "brdic.vscode-tailwindcss",
+    "Vue.volar"
+  ]
+}
