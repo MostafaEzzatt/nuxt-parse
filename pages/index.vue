@@ -4,8 +4,8 @@
       Hello world!
     </h1>
 
-    <NuxtLink to="/auth/signin" class="text-blue-500">
+    <a href="/dashboard" class="text-blue-500">
       Dashboard
-    </NuxtLink>
+    </a>
   </div>
 </template>
