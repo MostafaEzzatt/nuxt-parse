@@ -11,8 +11,8 @@ function signOut() {
     <pre>
       {{ auth.user }}
     </pre>
-    <Button class="bg-red-500 text-white" @click="signOut">
+    <UiButton class="bg-red-500 text-white" @click="signOut">
       Sign Out
-    </Button>
+    </UiButton>
   </div>
 </template>

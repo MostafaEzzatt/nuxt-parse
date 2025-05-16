@@ -8,5 +8,9 @@ const auth = useAuthStore();
     <strong>
       Dashboard
     </strong>
+
+    <nuxt-link to="/signout">
+      Signout
+    </nuxt-link>
   </div>
 </template>
