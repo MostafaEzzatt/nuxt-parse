@@ -19,10 +19,15 @@ export const useAuthStore = defineStore("useAuthStore", () => {
       name,
     }, {
       onError: (ctx) => {
-        console.error(ctx.error.status, ctx.error.message);
+        navigateTo({
+          path: "/auth/signup",
+          query: {
+            error: ctx.error.message,
+          },
+        });
       },
       onSuccess: () => {
-        navigateTo("/auth/signin"); // redirect to sign in page
+        navigateTo("/dashboard"); // redirect to sign in page
       },
     });
   }
@@ -33,7 +38,14 @@ export const useAuthStore = defineStore("useAuthStore", () => {
       password,
     }, {
       onError: (ctx) => {
-        console.error(ctx.error.status, ctx.error.message);
+        // console.error(ctx.error.status, ctx.error.message);
+        // send user the the same page with error message in the query string
+        navigateTo({
+          path: "/auth/signin",
+          query: {
+            error: ctx.error.message,
+          },
+        });
       },
       onSuccess: () => {
         navigateTo("/dashboard"); // redirect to dashboard

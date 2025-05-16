@@ -8,6 +8,12 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 | ---------------- | ------------- | -------------- | -------- | ----------------------------------------------------------------------------- |
 | Create Auth Form | < 2 hours     | in progress    | ❎       | [Start Point In YT VID](https://www.youtube.com/watch?v=DK93dqmJJYg&t=13616s) |
 
+## How to add shadcn component
+
+```bash
+pnpm dlx shadcn-vue@latest add input
+```
+
 ## Setup
 
 Make sure to install dependencies:
