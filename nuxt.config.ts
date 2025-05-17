@@ -6,7 +6,7 @@ import "./lib/env";
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
-  modules: ["@nuxt/eslint", "shadcn-nuxt", "@pinia/nuxt", "@nuxtjs/color-mode", "@vee-validate/nuxt", "@nuxt/icon"],
+  modules: ["@nuxt/eslint", "shadcn-nuxt", "@pinia/nuxt", "@nuxtjs/color-mode", "@vee-validate/nuxt", "@nuxt/icon", "nuxt-csurf"],
   eslint: {
     config: {
       standalone: false,

@@ -13,11 +13,16 @@ export const useAuthStore = defineStore("useAuthStore", () => {
   const loading = computed(() => session.value?.isPending);
 
   async function signUp(email: string, password: string, name: string) {
+    const { csrf } = useCsrf();
+    const headers = new Headers();
+    headers.append("csrf-token", csrf);
+
     await authClient.signUp.email({
       email,
       password,
       name,
     }, {
+      headers,
       onError: (ctx) => {
         navigateTo({
           path: "/auth/signup",
@@ -33,10 +38,16 @@ export const useAuthStore = defineStore("useAuthStore", () => {
   }
 
   async function signIn(email: string, password: string) {
+    const { csrf } = useCsrf();
+    const headers = new Headers();
+    headers.append("csrf-token", csrf);
+
     await authClient.signIn.email({
       email,
       password,
     }, {
+      headers,
+
       onError: (ctx) => {
         // console.error(ctx.error.status, ctx.error.message);
         // send user the the same page with error message in the query string
@@ -54,10 +65,17 @@ export const useAuthStore = defineStore("useAuthStore", () => {
   }
 
   async function signOut() {
+    const { csrf } = useCsrf();
+    const headers = new Headers();
+    headers.append("csrf-token", csrf);
     await authClient.signOut({
       fetchOptions: {
+        headers,
         onSuccess: () => {
           navigateTo("/"); // redirect to login page
+        },
+        onError: (e) => {
+          console.log(e.error.message);
         },
       },
     },

@@ -7,6 +7,7 @@ import { defaultVariant } from "~/components/ui/textarea";
 import { parseInsertSchema } from "~/lib/db/schema";
 import { cn } from "~/lib/utils";
 
+const { $csrfFetch } = useNuxtApp();
 const submitErrors = ref("");
 const loading = ref(false);
 const dataType = [
@@ -25,12 +26,10 @@ const { handleSubmit, errors, setErrors } = useForm({
 const onSubmit = handleSubmit(async (values) => {
   loading.value = true;
   try {
-    const insert = await $fetch("/api/parse", {
+    await $csrfFetch("/api/parse", {
       method: "post",
       body: values,
     });
-
-    console.log(insert);
   }
   catch (e) {
     const error = e as FetchError;
