@@ -1,4 +1,14 @@
 <script setup lang="ts">
+import type { FetchError } from "ofetch";
+
+import { UiButton } from "#components";
+
+import { defaultVariant } from "~/components/ui/textarea";
+import { parseInsertSchema } from "~/lib/db/schema";
+import { cn } from "~/lib/utils";
+
+const submitErrors = ref("");
+const loading = ref(false);
 const dataType = [
   { display: "DAILY DEPARTURE FLIGHTS", value: "daily-departure-flights" },
   { display: "SCHEDULE FOR D & A FLIGHT", value: "schedule-for-d-and-a-flight" },
@@ -7,6 +17,31 @@ const dataType = [
   { display: "MS PRODUCTION SHEET", value: "ms-production-sheet" },
   { display: "Special Meals", value: "special-meals" },
 ];
+
+const { handleSubmit, errors, setErrors } = useForm({
+  validationSchema: toTypedSchema(parseInsertSchema),
+});
+
+const onSubmit = handleSubmit(async (values) => {
+  loading.value = true;
+  try {
+    const insert = await $fetch("/api/parse", {
+      method: "post",
+      body: values,
+    });
+
+    console.log(insert);
+  }
+  catch (e) {
+    const error = e as FetchError;
+    if (error.data?.data) {
+      setErrors(error.data?.data);
+    }
+    submitErrors.value = error.statusMessage || "Oh Unknown Error";
+  }
+
+  loading.value = false;
+});
 </script>
 
 <template>
@@ -20,34 +55,74 @@ const dataType = [
       </p>
     </div>
 
-    <form class="mt-6">
+    <div>
+      <UiAlert v-if="submitErrors" variant="destructive" class="mb-4">
+        <Icon
+          name="lucide:octagon-x"
+          size="20"
+        />
+
+        <UiAlertTitle class="ml-7">
+          Heads up!
+        </UiAlertTitle>
+        <UiAlertDescription class="ml-7">
+          {{ submitErrors }}
+        </UiAlertDescription>
+      </UiAlert>
+    </div>
+
+    <form class="mt-6" @submit.prevent="onSubmit">
       <div class="space-y-6">
         <div class="space-y-2">
           <UiLabel for="content">
             Sheet Data
           </UiLabel>
-          <UiTextarea name="content" placeholder="Please Past {CTRL + V} Your Data Here" class="min-h-45" />
+          <Field
+            :disabled="loading"
+            as="textarea"
+            name="content"
+            placeholder="Please Past {CTRL + V} Your Data Here"
+            :class="cn(defaultVariant, 'min-h-40')"
+          />
+
+          <p v-if="errors.content" class="text-red-400">
+            {{ errors.content }}
+          </p>
         </div>
 
         <div class="flex justify-between items-end">
           <div class="space-y-2 flex gap-4">
-            <UiLabel for="content">
+            <UiLabel for="content" class="text-nowrap">
               Data Type :
             </UiLabel>
-            <UiSelect name="type">
-              <UiSelectTrigger class-name="w-[180px]">
-                <UiSelectValue placeholder="Choose Sheet Data Type" />
-              </UiSelectTrigger>
-              <UiSelectContent>
-                <UiSelectItem v-for="type in dataType" :key="type.value" :value="type.value">
-                  {{ type.display }}
-                </UiSelectItem>
-              </UiSelectContent>
-            </UiSelect>
+            <Field
+              :disabled="loading"
+              name="type"
+              as="select"
+              placeholder="Choose Sheet"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-[#020618] dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:cursor-not-allowed"
+            >
+              <option selected disabled>
+                Choose Sheet Data Type
+              </option>
+
+              <option
+                v-for="type in dataType"
+                :key="type.value"
+                :value="type.value"
+                class="bg-transparent"
+              >
+                {{ type.display }}
+              </option>
+            </Field>
+
+            <p v-if="errors.type" class="text-red-400">
+              {{ errors.type }}
+            </p>
           </div>
 
           <div class="space-y-2">
-            <UiButton type="submit" variant="default">
+            <UiButton type="submit" :disabled="loading" variant="default">
               Parse Data
             </UiButton>
           </div>
