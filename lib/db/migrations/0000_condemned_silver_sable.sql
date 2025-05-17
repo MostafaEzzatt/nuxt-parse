@@ -48,8 +48,12 @@ CREATE TABLE `verification` (
 	`updated_at` integer
 );
 --> statement-breakpoint
-ALTER TABLE `parse` ADD `user_id` integer NOT NULL REFERENCES user(id);--> statement-breakpoint
-ALTER TABLE `parse` ADD `created_at` integer NOT NULL;--> statement-breakpoint
-ALTER TABLE `parse` ADD `updated_at` integer NOT NULL;--> statement-breakpoint
-ALTER TABLE `parse` DROP COLUMN `createdAt`;--> statement-breakpoint
-ALTER TABLE `parse` DROP COLUMN `updatedAt`;
+CREATE TABLE `parse` (
+	`id` integer PRIMARY KEY NOT NULL,
+	`type` text NOT NULL,
+	`content` text NOT NULL,
+	`user_id` text NOT NULL,
+	`created_at` integer NOT NULL,
+	`updated_at` integer NOT NULL,
+	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
+);
