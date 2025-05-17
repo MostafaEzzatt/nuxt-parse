@@ -75,7 +75,7 @@ export const useAuthStore = defineStore("useAuthStore", () => {
           navigateTo("/"); // redirect to login page
         },
         onError: (e) => {
-          console.log(e.error.message);
+          console.warn(e.error.message);
         },
       },
     },
