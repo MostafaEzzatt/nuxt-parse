@@ -21,7 +21,7 @@ const filteredLinks = computed(() =>
 </script>
 
 <template>
-  <div class="bg-zinc-950/95 border-b border-b-zinc-800 text-white/90 absolute left-0 right-0  flex justify-between items-center px-6 min-h-12">
+  <div class="bg-zinc-950/95 border-b border-b-zinc-800 text-white/90 absolute left-0 right-0  flex justify-between items-center px-6 min-h-12 print:hidden">
     <NuxtLink
       to="/"
     >

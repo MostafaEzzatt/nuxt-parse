@@ -6,7 +6,7 @@ await auth.init();
 <template>
   <div class="w-full min-h-screen">
     <Navbar />
-    <div class="pt-16">
+    <div class="pt-16 print:pt-0">
       <slot />
     </div>
   </div>

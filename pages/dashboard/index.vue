@@ -7,6 +7,9 @@ import { defaultVariant } from "~/components/ui/textarea";
 import { parseInsertSchema } from "~/lib/db/schema";
 import { cn } from "~/lib/utils";
 
+const cateringStore = useCateringSheet();
+const parsedData = ref("");
+
 const { $csrfFetch } = useNuxtApp();
 const submitErrors = ref("");
 const loading = ref(false);
@@ -26,6 +29,8 @@ const { handleSubmit, errors, setErrors } = useForm({
 const onSubmit = handleSubmit(async (values) => {
   loading.value = true;
   try {
+    const ss = cateringStore.splitToFlights(values.content);
+    parsedData.value = ss;
     await $csrfFetch("/api/parse", {
       method: "post",
       body: values,
@@ -44,89 +49,92 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <div class="container mx-auto px-7">
-    <div>
-      <h1 class="text-2xl font-bold">
-        Parse your data
-      </h1>
-      <p class="mt-4">
-        Please choose the type of data you want to parse.
-      </p>
-    </div>
+  <div>
+    <div class="container mx-auto px-7 print:hidden">
+      <div>
+        <h1 class="text-2xl font-bold">
+          Parse your data
+        </h1>
+        <p class="mt-4">
+          Please choose the type of data you want to parse.
+        </p>
+      </div>
 
-    <div>
-      <UiAlert v-if="submitErrors" variant="destructive" class="mb-4">
-        <Icon
-          name="lucide:octagon-x"
-          size="20"
-        />
-
-        <UiAlertTitle class="ml-7">
-          Heads up!
-        </UiAlertTitle>
-        <UiAlertDescription class="ml-7">
-          {{ submitErrors }}
-        </UiAlertDescription>
-      </UiAlert>
-    </div>
-
-    <form class="mt-6" @submit.prevent="onSubmit">
-      <div class="space-y-6">
-        <div class="space-y-2">
-          <UiLabel for="content">
-            Sheet Data
-          </UiLabel>
-          <Field
-            :disabled="loading"
-            as="textarea"
-            name="content"
-            placeholder="Please Past {CTRL + V} Your Data Here"
-            :class="cn(defaultVariant, 'min-h-40')"
+      <div>
+        <UiAlert v-if="submitErrors" variant="destructive" class="mb-4">
+          <Icon
+            name="lucide:octagon-x"
+            size="20"
           />
 
-          <p v-if="errors.content" class="text-red-400">
-            {{ errors.content }}
-          </p>
-        </div>
+          <UiAlertTitle class="ml-7">
+            Heads up!
+          </UiAlertTitle>
+          <UiAlertDescription class="ml-7">
+            {{ submitErrors }}
+          </UiAlertDescription>
+        </UiAlert>
+      </div>
 
-        <div class="flex justify-between items-end">
-          <div class="space-y-2 flex gap-4">
-            <UiLabel for="content" class="text-nowrap">
-              Data Type :
+      <form class="mt-6" @submit.prevent="onSubmit">
+        <div class="space-y-6">
+          <div class="space-y-2">
+            <UiLabel for="content">
+              Sheet Data
             </UiLabel>
             <Field
               :disabled="loading"
-              name="type"
-              as="select"
-              placeholder="Choose Sheet"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-[#020618] dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:cursor-not-allowed"
-            >
-              <option selected disabled>
-                Choose Sheet Data Type
-              </option>
+              as="textarea"
+              name="content"
+              placeholder="Please Past {CTRL + V} Your Data Here"
+              :class="cn(defaultVariant, 'min-h-40 max-h-40')"
+            />
 
-              <option
-                v-for="type in dataType"
-                :key="type.value"
-                :value="type.value"
-                class="bg-transparent"
-              >
-                {{ type.display }}
-              </option>
-            </Field>
-
-            <p v-if="errors.type" class="text-red-400">
-              {{ errors.type }}
+            <p v-if="errors.content" class="text-red-400">
+              {{ errors.content }}
             </p>
           </div>
 
-          <div class="space-y-2">
-            <UiButton type="submit" :disabled="loading" variant="default">
-              Parse Data
-            </UiButton>
+          <div class="flex justify-between items-end">
+            <div class="space-y-2 flex gap-4">
+              <UiLabel for="content" class="text-nowrap">
+                Data Type :
+              </UiLabel>
+              <Field
+                :disabled="loading"
+                name="type"
+                as="select"
+                placeholder="Choose Sheet"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-[#020618] dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:cursor-not-allowed"
+              >
+                <option selected disabled>
+                  Choose Sheet Data Type
+                </option>
+
+                <option
+                  v-for="type in dataType"
+                  :key="type.value"
+                  :value="type.value"
+                  class="bg-transparent"
+                >
+                  {{ type.display }}
+                </option>
+              </Field>
+
+              <p v-if="errors.type" class="text-red-400">
+                {{ errors.type }}
+              </p>
+            </div>
+
+            <div class="space-y-2">
+              <UiButton type="submit" :disabled="loading" variant="default">
+                Parse Data
+              </UiButton>
+            </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
+    <pre class="w-fit mx-auto">{{ parsedData }}</pre>
   </div>
 </template>
