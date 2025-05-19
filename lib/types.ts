@@ -6,3 +6,19 @@ declare module "h3"{
     user?: User;
   }
 }
+
+type undefinedStore = {
+  type: undefined;
+  data: undefined;
+};
+
+type cateringStoreType = {
+  type: "ms-production-sheet";
+  data: ReturnType<ReturnType<typeof useCateringSheet>["splitToFlights"]>;
+};
+type departureStoreType = {
+  type: "daily-departure-flights";
+  data: ReturnType<ReturnType<typeof useDepartureSheet>["init"]>;
+};
+
+export type parseStoresTypes = cateringStoreType | departureStoreType | undefinedStore;
