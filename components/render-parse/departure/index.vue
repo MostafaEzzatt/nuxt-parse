@@ -90,7 +90,7 @@ function splitIntoGroups(arr: Array<string[]>, numberOfGroups = 32) {
   </div>
 </template>
 
-<style>
+<style scoped>
 .groups {
   margin-top: 20px;
 }
