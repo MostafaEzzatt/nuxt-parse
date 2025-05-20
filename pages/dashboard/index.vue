@@ -3,12 +3,15 @@ import type { FetchError } from "ofetch";
 
 import { UiButton } from "#components";
 
+import type { parseStoresTypes } from "~/lib/types";
+
 import { defaultVariant } from "~/components/ui/textarea";
 import { parseInsertSchema } from "~/lib/db/schema";
 import { cn } from "~/lib/utils";
 
 const cateringStore = useCateringSheet();
-const parsedData = ref("");
+const departureStore = useDepartureSheet();
+const parsedData = ref<parseStoresTypes>({ type: undefined, data: undefined });
 
 const { $csrfFetch } = useNuxtApp();
 const submitErrors = ref("");
@@ -29,8 +32,19 @@ const { handleSubmit, errors, setErrors } = useForm({
 const onSubmit = handleSubmit(async (values) => {
   loading.value = true;
   try {
-    const ss = cateringStore.splitToFlights(values.content);
-    parsedData.value = ss;
+    if (values.type === "ms-production-sheet") {
+      parsedData.value = {
+        type: "ms-production-sheet",
+        data: cateringStore.splitToFlights(values.content),
+      };
+    }
+    else if (values.type === "daily-departure-flights") {
+      parsedData.value = {
+        type: values.type,
+        data: departureStore.init(values.content),
+      };
+    }
+
     await $csrfFetch("/api/parse", {
       method: "post",
       body: values,
@@ -135,6 +149,8 @@ const onSubmit = handleSubmit(async (values) => {
         </div>
       </form>
     </div>
-    <pre class="w-fit mx-auto">{{ parsedData }}</pre>
+    <!-- Render Here -->
+    <RenderParseCatering v-if="parsedData.type === 'ms-production-sheet'" :parse-data="parsedData.data" />
+    <RenderParseDeparture v-if="parsedData.type === 'daily-departure-flights'" :results="parsedData.data" />
   </div>
 </template>
