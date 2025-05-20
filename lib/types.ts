@@ -1,5 +1,7 @@
 import type { User } from "better-auth";
 
+import type { useForignSheetStore } from "~/stores/parse-forign-sheet";
+
 declare module "h3"{
   // eslint-disable-next-line ts/consistent-type-definitions
   interface H3EventContext {
@@ -16,9 +18,15 @@ type cateringStoreType = {
   type: "ms-production-sheet";
   data: ReturnType<ReturnType<typeof useCateringSheet>["splitToFlights"]>;
 };
+
 type departureStoreType = {
   type: "daily-departure-flights";
   data: ReturnType<ReturnType<typeof useDepartureSheet>["init"]>;
 };
 
-export type parseStoresTypes = cateringStoreType | departureStoreType | undefinedStore;
+type useForignSheetType = {
+  type: "foreign-carriers-production-sheet";
+  data: ReturnType<ReturnType<typeof useForignSheetStore>["init"]>;
+};
+
+export type parseStoresTypes = cateringStoreType | departureStoreType | useForignSheetType | undefinedStore;
