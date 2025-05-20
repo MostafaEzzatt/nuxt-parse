@@ -7,9 +7,10 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 | Task             | Time required | Current Status | Finished | Note                                                                          |
 | ---------------- | ------------- | -------------- | -------- | ----------------------------------------------------------------------------- |
 | Create Auth Form | < 2 hours     | in progress    | ✅       | [Start Point In YT VID](https://www.youtube.com/watch?v=DK93dqmJJYg&t=13616s) |
-| Parse Departure  | < 2 hours     | in progress    | ❎       |                                                                               |
-| Plan             | < 2 hours     | in progress    | ❎       |                                                                               |
+| Parse Departure  | < 2 hours     | in progress    | ✅       |                                                                               |
+| Catering         | < 2 hours     | in progress    | ✅       |                                                                               |
 | Forign Sheet     | < 2 hours     | in progress    | ❎       |                                                                               |
+| Plan             | < 2 hours     | in progress    | ❎       |                                                                               |
 | Special Meals    | < 2 hours     | in progress    | ❎       |                                                                               |
 | Shedual          | < 2 hours     | in progress    | ❎       |                                                                               |
 

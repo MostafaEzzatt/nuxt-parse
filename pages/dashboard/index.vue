@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import type { FetchError } from "ofetch";
 
-import { UiButton } from "#components";
+import { RenderParseForeign, UiButton } from "#components";
 
 import type { parseStoresTypes } from "~/lib/types";
 
 import { defaultVariant } from "~/components/ui/textarea";
 import { parseInsertSchema } from "~/lib/db/schema";
 import { cn } from "~/lib/utils";
+import { useForignSheetStore } from "~/stores/parse-forign-sheet";
 
 const cateringStore = useCateringSheet();
 const departureStore = useDepartureSheet();
+const forignStore = useForignSheetStore();
 const parsedData = ref<parseStoresTypes>({ type: undefined, data: undefined });
 
 const { $csrfFetch } = useNuxtApp();
@@ -42,6 +44,12 @@ const onSubmit = handleSubmit(async (values) => {
       parsedData.value = {
         type: values.type,
         data: departureStore.init(values.content),
+      };
+    }
+    else if (values.type === "foreign-carriers-production-sheet") {
+      parsedData.value = {
+        type: values.type,
+        data: forignStore.init(values.content),
       };
     }
 
@@ -152,5 +160,6 @@ const onSubmit = handleSubmit(async (values) => {
     <!-- Render Here -->
     <RenderParseCatering v-if="parsedData.type === 'ms-production-sheet'" :parse-data="parsedData.data" />
     <RenderParseDeparture v-if="parsedData.type === 'daily-departure-flights'" :results="parsedData.data" />
+    <RenderParseForeign v-if="parsedData.type === 'foreign-carriers-production-sheet'" :parse-data="parsedData.data" />
   </div>
 </template>
