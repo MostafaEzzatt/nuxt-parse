@@ -29,4 +29,9 @@ type useForignSheetType = {
   data: ReturnType<ReturnType<typeof useForignSheetStore>["init"]>;
 };
 
-export type parseStoresTypes = cateringStoreType | departureStoreType | useForignSheetType | undefinedStore;
+type usePlaningSheetType = {
+  type: "plan-daily-flights-sheet";
+  data: ReturnType<ReturnType<typeof usePlaningSheetStore>["init"]>;
+};
+
+export type parseStoresTypes = cateringStoreType | departureStoreType | useForignSheetType | usePlaningSheetType | undefinedStore;

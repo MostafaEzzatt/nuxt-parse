@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FetchError } from "ofetch";
 
-import { RenderParseForeign, UiButton } from "#components";
+import { RenderParseForeign, RenderParsePlaning, UiButton } from "#components";
 
 import type { parseStoresTypes } from "~/lib/types";
 
@@ -13,6 +13,7 @@ import { useForignSheetStore } from "~/stores/parse-forign-sheet";
 const cateringStore = useCateringSheet();
 const departureStore = useDepartureSheet();
 const forignStore = useForignSheetStore();
+const planingStore = usePlaningSheetStore();
 const parsedData = ref<parseStoresTypes>({ type: undefined, data: undefined });
 
 const { $csrfFetch } = useNuxtApp();
@@ -20,11 +21,11 @@ const submitErrors = ref("");
 const loading = ref(false);
 const dataType = [
   { display: "DAILY DEPARTURE FLIGHTS", value: "daily-departure-flights" },
-  { display: "SCHEDULE FOR D & A FLIGHT", value: "schedule-for-d-and-a-flight" },
-  { display: "PLAN DAILY FLIGHTS SHEET", value: "plan-daily-flights-sheet" },
-  { display: "FOREIGN CARRIERS PRODUCTION SHEET", value: "foreign-carriers-production-sheet" },
   { display: "MS PRODUCTION SHEET", value: "ms-production-sheet" },
+  { display: "FOREIGN CARRIERS PRODUCTION SHEET", value: "foreign-carriers-production-sheet" },
+  { display: "PLAN DAILY FLIGHTS SHEET", value: "plan-daily-flights-sheet" },
   { display: "Special Meals", value: "special-meals" },
+  { display: "SCHEDULE FOR D & A FLIGHT", value: "schedule-for-d-and-a-flight" },
 ];
 
 const { handleSubmit, errors, setErrors } = useForm({
@@ -50,6 +51,12 @@ const onSubmit = handleSubmit(async (values) => {
       parsedData.value = {
         type: values.type,
         data: forignStore.init(values.content),
+      };
+    }
+    else if (values.type === "plan-daily-flights-sheet") {
+      parsedData.value = {
+        type: values.type,
+        data: planingStore.init(values.content),
       };
     }
 
@@ -161,5 +168,6 @@ const onSubmit = handleSubmit(async (values) => {
     <RenderParseCatering v-if="parsedData.type === 'ms-production-sheet'" :parse-data="parsedData.data" />
     <RenderParseDeparture v-if="parsedData.type === 'daily-departure-flights'" :results="parsedData.data" />
     <RenderParseForeign v-if="parsedData.type === 'foreign-carriers-production-sheet'" :parse-data="parsedData.data" />
+    <RenderParsePlaning v-if="parsedData.type === 'plan-daily-flights-sheet'" :results="parsedData.data" />
   </div>
 </template>
