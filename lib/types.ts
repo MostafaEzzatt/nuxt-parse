@@ -34,4 +34,10 @@ type usePlaningSheetType = {
   data: ReturnType<ReturnType<typeof usePlaningSheetStore>["init"]>;
 };
 
-export type parseStoresTypes = cateringStoreType | departureStoreType | useForignSheetType | usePlaningSheetType | undefinedStore;
+export type useSpecialMealDataType = ReturnType<ReturnType<typeof useSpecialMealStore>["init"]>;
+type useSpecialMealType = {
+  type: "special-meals";
+  data: useSpecialMealDataType;
+};
+
+export type parseStoresTypes = cateringStoreType | departureStoreType | useForignSheetType | usePlaningSheetType | useSpecialMealType | undefinedStore;

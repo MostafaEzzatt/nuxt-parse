@@ -14,6 +14,7 @@ const cateringStore = useCateringSheet();
 const departureStore = useDepartureSheet();
 const forignStore = useForignSheetStore();
 const planingStore = usePlaningSheetStore();
+const specialMealStore = useSpecialMealStore();
 const parsedData = ref<parseStoresTypes>({ type: undefined, data: undefined });
 
 const { $csrfFetch } = useNuxtApp();
@@ -57,6 +58,12 @@ const onSubmit = handleSubmit(async (values) => {
       parsedData.value = {
         type: values.type,
         data: planingStore.init(values.content),
+      };
+    }
+    else if (values.type === "special-meals") {
+      parsedData.value = {
+        type: values.type,
+        data: specialMealStore.init(values.content),
       };
     }
 
@@ -169,5 +176,6 @@ const onSubmit = handleSubmit(async (values) => {
     <RenderParseDeparture v-if="parsedData.type === 'daily-departure-flights'" :results="parsedData.data" />
     <RenderParseForeign v-if="parsedData.type === 'foreign-carriers-production-sheet'" :parse-data="parsedData.data" />
     <RenderParsePlaning v-if="parsedData.type === 'plan-daily-flights-sheet'" :results="parsedData.data" />
+    <RenderParseSepcialMeal v-if="parsedData.type === 'special-meals'" :data="parsedData.data" />
   </div>
 </template>
