@@ -8,8 +8,6 @@ const props = defineProps({
   },
 });
 
-console.warn(jsonData);
-
 function getDistenationInArabic(text: string) {
   if (text.includes(" ")) {
     const codeArr = text.replace(/\s+/g, " ").split(" ");

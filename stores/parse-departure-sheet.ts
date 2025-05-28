@@ -20,15 +20,6 @@ export const useDepartureSheet = defineStore("useDepartureSheet", () => {
 
     for (let i = 0; i < removedLines.length; i++) {
       const line = removedLines[i];
-      //       EGYPTAIR
-      //   COMPUTER CENTER                                                                  TIME 12:29:27
-      //  AVIATION SERVICES                                                                 DATE 22/03/25
-      //                                   DAILY DEPARTURE FLIGHTS
-      //                             كشف رحلات القيام اليومى بمصر للطيران
-      //                             -----------------------------------
-      //      DATE : 21/03/2025
-      //  CUS    FLIGHT NO                   R    O    U    T    E             A/C      A.T.D      NO.OF
-      //  ---  -وقت القيام   ----     ---------------------------------------      -الحرف--الرقم   SECTOR
 
       if (line.includes("EGYPTAIR") && !firstHeader) {
         header += `      EGYPTAIR\n`;

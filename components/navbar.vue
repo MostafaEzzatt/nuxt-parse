@@ -12,6 +12,7 @@ const links = [
   { name: "Signin", path: "/auth/signin", whenAuth: false },
   { name: "Signup", path: "/auth/signup", whenAuth: false },
   { name: "Dashboard", path: "/dashboard", whenAuth: true },
+  { name: "Records", path: "/dashboard/records/all", whenAuth: true },
 ];
 
 // Only show links based on authentication status

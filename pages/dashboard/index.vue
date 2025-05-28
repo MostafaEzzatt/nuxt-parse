@@ -7,28 +7,15 @@ import type { parseStoresTypes } from "~/lib/types";
 
 import { defaultVariant } from "~/components/ui/textarea";
 import { parseInsertSchema } from "~/lib/db/schema";
+import { dataType, parseType } from "~/lib/types";
 import { cn } from "~/lib/utils";
 import { useForignSheetStore } from "~/stores/parse-forign-sheet";
 
-const cateringStore = useCateringSheet();
-const departureStore = useDepartureSheet();
-const forignStore = useForignSheetStore();
-const planingStore = usePlaningSheetStore();
-const specialMealStore = useSpecialMealStore();
-const sechdualStore = useScheduleStore();
 const parsedData = ref<parseStoresTypes>({ type: undefined, data: undefined });
 
 const { $csrfFetch } = useNuxtApp();
 const submitErrors = ref("");
 const loading = ref(false);
-const dataType = [
-  { display: "DAILY DEPARTURE FLIGHTS", value: "daily-departure-flights" },
-  { display: "MS PRODUCTION SHEET", value: "ms-production-sheet" },
-  { display: "FOREIGN CARRIERS PRODUCTION SHEET", value: "foreign-carriers-production-sheet" },
-  { display: "PLAN DAILY FLIGHTS SHEET", value: "plan-daily-flights-sheet" },
-  { display: "Special Meals", value: "special-meals" },
-  { display: "SCHEDULE FOR D & A FLIGHT", value: "schedule-for-d-and-a-flight" },
-];
 
 const { handleSubmit, errors, setErrors } = useForm({
   validationSchema: toTypedSchema(parseInsertSchema),
@@ -39,38 +26,38 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     if (values.type === "ms-production-sheet") {
       parsedData.value = {
-        type: "ms-production-sheet",
-        data: cateringStore.splitToFlights(values.content),
+        type: parseType.msProductionSheet,
+        data: useCateringSheet().splitToFlights(values.content),
       };
     }
     else if (values.type === "daily-departure-flights") {
       parsedData.value = {
-        type: values.type,
-        data: departureStore.init(values.content),
+        type: parseType.dailyDepartureFlights,
+        data: useDepartureSheet().init(values.content),
       };
     }
     else if (values.type === "foreign-carriers-production-sheet") {
       parsedData.value = {
-        type: values.type,
-        data: forignStore.init(values.content),
+        type: parseType.foreignCarriersProductionSheet,
+        data: useForignSheetStore().init(values.content),
       };
     }
     else if (values.type === "plan-daily-flights-sheet") {
       parsedData.value = {
-        type: values.type,
-        data: planingStore.init(values.content),
+        type: parseType.planDailyFlightsSheet,
+        data: usePlaningSheetStore().init(values.content),
       };
     }
     else if (values.type === "special-meals") {
       parsedData.value = {
-        type: values.type,
-        data: specialMealStore.init(values.content),
+        type: parseType.specialMeals,
+        data: useSpecialMealStore().init(values.content),
       };
     }
     else if (values.type === "schedule-for-d-and-a-flight") {
       parsedData.value = {
-        type: values.type,
-        data: sechdualStore.init(values.content),
+        type: parseType.scheduleForDAndAFlight,
+        data: useScheduleStore().init(values.content),
       };
     }
 
