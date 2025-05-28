@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { FetchError } from "ofetch";
 
-import { RenderParseForeign, RenderParsePlaning, UiButton } from "#components";
+import { RenderParseForeign, RenderParsePlaning, RenderParseSchedual, UiButton } from "#components";
 
 import type { parseStoresTypes } from "~/lib/types";
 
@@ -15,6 +15,7 @@ const departureStore = useDepartureSheet();
 const forignStore = useForignSheetStore();
 const planingStore = usePlaningSheetStore();
 const specialMealStore = useSpecialMealStore();
+const sechdualStore = useScheduleStore();
 const parsedData = ref<parseStoresTypes>({ type: undefined, data: undefined });
 
 const { $csrfFetch } = useNuxtApp();
@@ -64,6 +65,12 @@ const onSubmit = handleSubmit(async (values) => {
       parsedData.value = {
         type: values.type,
         data: specialMealStore.init(values.content),
+      };
+    }
+    else if (values.type === "schedule-for-d-and-a-flight") {
+      parsedData.value = {
+        type: values.type,
+        data: sechdualStore.init(values.content),
       };
     }
 
@@ -177,5 +184,6 @@ const onSubmit = handleSubmit(async (values) => {
     <RenderParseForeign v-if="parsedData.type === 'foreign-carriers-production-sheet'" :parse-data="parsedData.data" />
     <RenderParsePlaning v-if="parsedData.type === 'plan-daily-flights-sheet'" :results="parsedData.data" />
     <RenderParseSepcialMeal v-if="parsedData.type === 'special-meals'" :data="parsedData.data" />
+    <RenderParseSchedual v-if="parsedData.type === 'schedule-for-d-and-a-flight'" :parse-data="parsedData.data" />
   </div>
 </template>

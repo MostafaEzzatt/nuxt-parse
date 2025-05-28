@@ -40,4 +40,10 @@ type useSpecialMealType = {
   data: useSpecialMealDataType;
 };
 
-export type parseStoresTypes = cateringStoreType | departureStoreType | useForignSheetType | usePlaningSheetType | useSpecialMealType | undefinedStore;
+export type useScheduleDataType = ReturnType<ReturnType<typeof useScheduleStore>["init"]>;
+type useScheduleType = {
+  type: "schedule-for-d-and-a-flight";
+  data: useScheduleDataType;
+};
+
+export type parseStoresTypes = cateringStoreType | departureStoreType | useForignSheetType | usePlaningSheetType | useSpecialMealType | useScheduleType | undefinedStore;

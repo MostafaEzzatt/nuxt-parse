@@ -11,7 +11,7 @@ Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduct
 | Catering         | < 2 hours     | in progress    | ✅       |                                                                               |
 | Forign Sheet     | < 2 hours     | in progress    | ✅       |                                                                               |
 | Plan             | < 2 hours     | in progress    | ✅       |                                                                               |
-| Special Meals    | < 2 hours     | in progress    | ❎       |                                                                               |
+| Special Meals    | < 2 hours     | in progress    | ✅       |                                                                               |
 | Shedual          | < 2 hours     | in progress    | ❎       |                                                                               |
 
 ## How to add shadcn component
