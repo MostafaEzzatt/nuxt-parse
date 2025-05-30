@@ -26,7 +26,6 @@ export const useSpecialMealStore = defineStore("useSpecialMealStore", () => {
       .filter(i => ![")>", ">", "m", "md", "end of display"].includes(i));
 
     for (let i = 0; i < cleanContent.length; i++) {
-      console.log({ allSPM });
       const currentLine = cleanContent[i];
 
       if (!currentLine.includes("ssr")) {

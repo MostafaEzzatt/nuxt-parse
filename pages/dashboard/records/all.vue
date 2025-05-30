@@ -4,35 +4,18 @@ import type { parseTypeEnum } from "~/lib/types";
 import { parseType } from "~/lib/types";
 
 async function getParsedDataList(type: parseTypeEnum) {
-  return await $fetch("/api/parse", {
-    method: "GET",
-    params: {
-      type,
-    },
+  const { data, status } = await useFetch("/api/parse", {
+    params: { type },
+    lazy: true,
   });
+  return { data, status };
 }
 
-type responseType = {
-  id: number;
-  type: string;
-  content: string;
-  userId: string;
-  createdAt: number;
-  updatedAt: number;
-}[];
-const catering = ref<responseType>([]);
-const departure = ref<responseType>([]);
-const eng = ref<responseType>([]);
-const plan = ref<responseType>([]);
-const schedule = ref<responseType>([]);
-
-onMounted(async () => {
-  catering.value = await getParsedDataList(parseType.msProductionSheet);
-  departure.value = await getParsedDataList(parseType.dailyDepartureFlights);
-  eng.value = await getParsedDataList(parseType.foreignCarriersProductionSheet);
-  plan.value = await getParsedDataList(parseType.planDailyFlightsSheet);
-  schedule.value = await getParsedDataList(parseType.scheduleForDAndAFlight);
-});
+const { data: catering, status: cateringStatus } = await getParsedDataList(parseType.msProductionSheet);
+const { data: departure, status: departureStatus } = await getParsedDataList(parseType.dailyDepartureFlights);
+const { data: eng, status: engStatus } = await getParsedDataList(parseType.foreignCarriersProductionSheet);
+const { data: plan, status: planStatus } = await getParsedDataList(parseType.planDailyFlightsSheet);
+const { data: schedule, status: schedualStatus } = await getParsedDataList(parseType.scheduleForDAndAFlight);
 
 function formateDate(num: number) {
   const mm = new Date(num).getMinutes();
@@ -44,7 +27,11 @@ function formateDate(num: number) {
 </script>
 
 <template>
-  <div class="container mx-auto">
+  <div v-if="cateringStatus === 'pending' || departureStatus === 'pending' || engStatus === 'pending' || planStatus === 'pending' || schedualStatus === 'pending'" class="flex items-center justify-center h-screen">
+    <UiLoading />
+  </div>
+
+  <div v-else class="container mx-auto">
     <UiTabs default-value="account" class="w-full">
       <UiTabsList class="max-w-fit mx-auto">
         <UiTabsTrigger class="cursor-pointer" value="account">
