@@ -1,88 +1,88 @@
 <script setup lang="ts">
 import type { parseStoresTypes } from "~/lib/types";
 
-import { parseType } from "~/lib/types";
+import { parseType, requestTypes } from "~/lib/types";
 
 // Define SerializeObject if not imported from elsewhere
-type SerializeObject<T> = T;
 
 const route = useRoute();
 const [type, id] = route.params.type as [string, string];
-
-const requestTypes = {
-  catering: parseType.msProductionSheet,
-  departure: parseType.dailyDepartureFlights,
-  foreign: parseType.foreignCarriersProductionSheet,
-  plan: parseType.planDailyFlightsSheet,
-  schedual: parseType.scheduleForDAndAFlight,
-};
 
 const requestTypesKeys = Object.keys(requestTypes) as (keyof typeof requestTypes)[];
 if (!requestTypesKeys.includes(type as keyof typeof requestTypes)) {
   throw new Error(`Invalid type: ${type}`);
 }
 
-const data = ref<SerializeObject<{
-  id: number;
-  type: string;
-  content: string;
-  userId: string;
-  createdAt: number;
-  updatedAt: number;
-}>[]>([]);
-
 const dataParsed = ref<parseStoresTypes>({ type: undefined, data: undefined });
 
-onMounted(async () => {
-  data.value = await ($fetch as any)("/api/parse-by-id", {
-    method: "GET",
-    params: {
-      type: requestTypes[type as keyof typeof requestTypes],
-      id,
-    },
-  });
-});
 const cateringStore = useCateringSheet();
 const departureStore = useDepartureSheet();
 const forignStore = useForignSheetStore();
 const planingStore = usePlaningSheetStore();
 const sechdualStore = useScheduleStore();
 
-watch(data, (newData) => {
-  if (newData.length > 0) {
-    const firstData = newData[0];
-    if (firstData.type === requestTypes.catering) {
-      dataParsed.value = {
-        type: parseType.msProductionSheet,
-        data: cateringStore.splitToFlights(firstData.content),
-      };
-    }
-    else if (firstData.type === requestTypes.departure) {
-      dataParsed.value = {
-        type: parseType.dailyDepartureFlights,
-        data: departureStore.init(firstData.content),
-      };
-    }
-    else if (firstData.type === requestTypes.foreign) {
-      dataParsed.value = {
-        type: parseType.foreignCarriersProductionSheet,
-        data: forignStore.init(firstData.content),
-      };
-    }
-    else if (firstData.type === requestTypes.plan) {
-      dataParsed.value = {
-        type: parseType.planDailyFlightsSheet,
-        data: planingStore.init(firstData.content),
-      };
-    }
-    else if (firstData.type === requestTypes.schedual) {
-      dataParsed.value = {
-        type: parseType.scheduleForDAndAFlight,
-        data: sechdualStore.init(firstData.content),
-      };
-    }
+async function getParsedDataList() {
+  const { data, status } = await useFetch("/api/parse-by-id", {
+    method: "GET",
+    params: {
+      type: requestTypes[type as keyof typeof requestTypes],
+      id,
+    },
+    lazy: true,
+  });
+
+  if (status.value !== "success") {
+    throw new Error(`Failed to fetch data: ${status.value}`);
   }
-});
+
+  if (!data.value || !Array.isArray(data.value)) {
+    throw new Error("Invalid data format received from API");
+  }
+
+  if (data.value.length === 0) {
+    throw new Error("No data found for the given type and id");
+  }
+
+  data.value.forEach((item: any) => {
+    if (!item.type || !item.content) {
+      throw new Error("Invalid data item format");
+    }
+  });
+
+  const firstData = data.value[0];
+  if (firstData.type === requestTypes.catering) {
+    dataParsed.value = {
+      type: parseType.msProductionSheet,
+      data: cateringStore.splitToFlights(firstData.content),
+    };
+  }
+  else if (firstData.type === requestTypes.departure) {
+    dataParsed.value = {
+      type: parseType.dailyDepartureFlights,
+      data: departureStore.init(firstData.content),
+    };
+  }
+  else if (firstData.type === requestTypes.foreign) {
+    dataParsed.value = {
+      type: parseType.foreignCarriersProductionSheet,
+      data: forignStore.init(firstData.content),
+    };
+  }
+  else if (firstData.type === requestTypes.plan) {
+    dataParsed.value = {
+      type: parseType.planDailyFlightsSheet,
+      data: planingStore.init(firstData.content),
+    };
+  }
+  else if (firstData.type === requestTypes.schedual) {
+    dataParsed.value = {
+      type: parseType.scheduleForDAndAFlight,
+      data: sechdualStore.init(firstData.content),
+    };
+  }
+}
+
+await getParsedDataList();
 </script>
 
 <template>

@@ -16,14 +16,6 @@ const { data: departure, status: departureStatus } = await getParsedDataList(par
 const { data: eng, status: engStatus } = await getParsedDataList(parseType.foreignCarriersProductionSheet);
 const { data: plan, status: planStatus } = await getParsedDataList(parseType.planDailyFlightsSheet);
 const { data: schedule, status: schedualStatus } = await getParsedDataList(parseType.scheduleForDAndAFlight);
-
-function formateDate(num: number) {
-  const mm = new Date(num).getMinutes();
-  const ss = new Date(num).getSeconds();
-  const minutes = mm < 10 ? `0${mm.toString()}` : mm;
-  const seconds = ss < 10 ? `0${ss.toString()}` : ss;
-  return `${new Date(num).getHours()} : ${minutes} : ${seconds}`;
-}
 </script>
 
 <template>
@@ -51,79 +43,19 @@ function formateDate(num: number) {
         </UiTabsTrigger>
       </UiTabsList>
       <UiTabsContent value="account">
-        <div class="grid grid-cols-3 gap-4 mt-6">
-          <a
-            v-for="data in catering"
-            :key="data.id"
-            :href="`/dashboard/records/catering/${data.id.toString()}`"
-            class="flex items-center justify-center gap-2 border-2 rounded px-4 py-2 col-span-1 bg-slate-100/0 hover:bg-slate-100/5 transition-all duration-200 font-semibold"
-          >
-            Created : {{ new Date(data.createdAt).toLocaleDateString() }} <Icon
-              name="tabler:arrow-right-rhombus-filled"
-              size="20"
-            /> {{ formateDate(data.createdAt) }}
-          </a>
-        </div>
+        <RecordsListItem :all-data="catering" />
       </UiTabsContent>
       <UiTabsContent value="departure">
-        <div class="grid grid-cols-3 gap-4 mt-6">
-          <a
-            v-for="data in departure"
-            :key="data.id"
-            :href="`/dashboard/records/departure/${data.id.toString()}`"
-            class="flex items-center justify-center gap-2 border-2 rounded px-4 py-2 col-span-1 bg-slate-100/0 hover:bg-slate-100/5 transition-all duration-200 font-semibold"
-          >
-            Created : {{ new Date(data.createdAt).toLocaleDateString() }} <Icon
-              name="tabler:arrow-right-rhombus-filled"
-              size="20"
-            /> {{ formateDate(data.createdAt) }}
-          </a>
-        </div>
+        <RecordsListItem :all-data="departure" />
       </UiTabsContent>
       <UiTabsContent value="eng">
-        <div class="grid grid-cols-3 gap-4 mt-6">
-          <a
-            v-for="data in eng"
-            :key="data.id"
-            :href="`/dashboard/records/foreign/${data.id.toString()}`"
-            class="flex items-center justify-center gap-2 border-2 rounded px-4 py-2 col-span-1 bg-slate-100/0 hover:bg-slate-100/5 transition-all duration-200 font-semibold"
-          >
-            Created : {{ new Date(data.createdAt).toLocaleDateString() }} <Icon
-              name="tabler:arrow-right-rhombus-filled"
-              size="20"
-            /> {{ formateDate(data.createdAt) }}
-          </a>
-        </div>
+        <RecordsListItem :all-data="eng" />
       </UiTabsContent>
       <UiTabsContent value="plan">
-        <div class="grid grid-cols-3 gap-4 mt-6">
-          <a
-            v-for="data in plan"
-            :key="data.id"
-            :href="`/dashboard/records/plan/${data.id.toString()}`"
-            class="flex items-center justify-center gap-2 border-2 rounded px-4 py-2 col-span-1 bg-slate-100/0 hover:bg-slate-100/5 transition-all duration-200 font-semibold"
-          >
-            Created : {{ new Date(data.createdAt).toLocaleDateString() }} <Icon
-              name="tabler:arrow-right-rhombus-filled"
-              size="20"
-            /> {{ formateDate(data.createdAt) }}
-          </a>
-        </div>
+        <RecordsListItem :all-data="plan" />
       </UiTabsContent>
       <UiTabsContent value="schedule">
-        <div class="grid grid-cols-3 gap-4 mt-6">
-          <a
-            v-for="data in schedule"
-            :key="data.id"
-            :href="`/dashboard/records/schedual/${data.id.toString()}`"
-            class="flex items-center justify-center gap-2 border-2 rounded px-4 py-2 col-span-1 bg-slate-100/0 hover:bg-slate-100/5 transition-all duration-200 font-semibold"
-          >
-            Created : {{ new Date(data.createdAt).toLocaleDateString() }} <Icon
-              name="tabler:arrow-right-rhombus-filled"
-              size="20"
-            /> {{ formateDate(data.createdAt) }}
-          </a>
-        </div>
+        <RecordsListItem :all-data="schedule" />
       </UiTabsContent>
     </UiTabs>
   </div>

@@ -68,3 +68,11 @@ export const dataType = [
   { display: "Special Meals", value: "special-meals" },
   { display: "SCHEDULE FOR D & A FLIGHT", value: "schedule-for-d-and-a-flight" },
 ];
+
+export const requestTypes = {
+  catering: parseType.msProductionSheet,
+  departure: parseType.dailyDepartureFlights,
+  foreign: parseType.foreignCarriersProductionSheet,
+  plan: parseType.planDailyFlightsSheet,
+  schedual: parseType.scheduleForDAndAFlight,
+};

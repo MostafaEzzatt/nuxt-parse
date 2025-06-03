@@ -1,6 +1,9 @@
+// zod schema for auth email and password
+
+import type { InferSelectModel } from "drizzle-orm";
+
 import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
-// zod schema for auth email and password
 
 import { user } from "./auth";
 
@@ -17,3 +20,5 @@ export const parseInsertSchema = createInsertSchema(parse, {
   content: field => field.min(1),
   type: field => field.min(1),
 }).omit({ id: true, userId: true, createdAt: true, updatedAt: true });
+
+export type parseSchemaType = InferSelectModel<typeof parse>;
