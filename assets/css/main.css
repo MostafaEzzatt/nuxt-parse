@@ -149,3 +149,10 @@ pre {
     margin-top: -16px;
   }
 }
+
+
+@layer utilities{
+  body{
+    @apply print:bg-transparent print:text-black
+  }
+}
