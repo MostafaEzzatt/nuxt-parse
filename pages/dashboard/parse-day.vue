@@ -143,6 +143,9 @@ function retypeFlightType(flightType: string): string {
     case "332":
       acType = "A333";
       break;
+    case "738":
+      acType = "H738";
+      break;
     default:
       // If the flight type is not recognized, return it as is.
       acType = flightType;
@@ -182,14 +185,14 @@ function parseFileData() {
     line.push(item);
   }
 
-  line = line.map((item) => {
+  line = line.map((item: string) => {
     return {
-      cus: item.split(" ").splice(0, 2).join(" ").trim(),
-      number: item.split(" ").splice(2, 4).join(" ").trim(),
-      dist: removeNonEnglishCharacters(item.split(" ").splice(4, 32).join(" ").trim()),
-      ac: retypeFlightType(item.split(" ").splice(35, 4).join(" ").trim()),
-      atd: item.split(" ").splice(39, 4).join(" ").trim(),
-      sector: item.split(" ").splice(43, 4).join(" ").trim(),
+      cus: item.substring(0, 4).trim(),
+      number: item.substring(6, 10).trim(),
+      dist: removeNonEnglishCharacters(item.substring(20, 28).trim()),
+      ac: retypeFlightType(item.substring(51, 57).trim()),
+      atd: item.substring(57, 68).replace(".", ":").trim(),
+      sector: item.substring(68, 75).replace("\r", "").trim(),
     };
   });
 
@@ -224,9 +227,10 @@ function parseOperaData() {
 
   line = line.map((item) => {
     const parts = item.split("\t");
+    console.log(parts);
     return {
       number: parts[1].split(" ")[1].trim(),
-      dist: parts[2].trim(),
+      dist: parts[2].replace("-CAI", "").replace("-", "  ").trim(),
       atd: parts[4].trim(),
       ac: retypeFlightType(parts[8].trim()),
     };
