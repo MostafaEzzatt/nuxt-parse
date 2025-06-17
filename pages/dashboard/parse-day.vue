@@ -207,38 +207,36 @@ function parseOperaData() {
     return;
   }
   const lines = textareaContent.value.split("\n");
-  let line = [];
+  const line = [];
+
   for (let i = 0; i < lines.length; i++) {
     const item = lines[i];
 
     if (item.includes("Egyptair")) {
-      i = i + 25;
-      continue;
-    }
-    else if (item.includes("CH")) {
-      continue;
-    }
-    else if (item.trim() === "") {
+      i = i + 13;
       continue;
     }
 
-    line.push(item);
+    const cleanLine = item.replace(/\s+/g, " ").split(" ");
+
+    if (cleanLine.length < 10)
+      continue;
+
+    line.push(cleanLine);
   }
 
-  line = line.map((item) => {
-    const parts = item.split("\t");
-    console.log(parts);
+  const returnLine = line.map((item) => {
     return {
-      number: parts[1].split(" ")[1].trim(),
-      dist: parts[2].replace("-CAI", "").replace("-", "  ").trim(),
-      atd: parts[4].trim(),
-      ac: retypeFlightType(parts[8].trim()),
+      number: item[2],
+      dist: item[3].replace("-CAI", "").replace("-", "  ").trim(),
+      atd: item[4].trim(),
+      ac: retypeFlightType(item[6].trim()),
     };
   });
 
   // If the date is valid, you can proceed with further processing.
   errorMessage.value = null; // Clear any previous error messages.
-  return line;
+  return returnLine;
 }
 
 function parseData() {
@@ -272,14 +270,12 @@ function parseData() {
   // opera { "number": "0060", "dist": "LXR", "atd": "23:55", "ac": "B738" }
   // imsl { "cus": "077", "number": "0958", "dist": "CAN                     ������", "ac": "B773", "atd": "00.10", "sector": "1" }
 
-  for (let i = 0; i < parseFileData.length; i++) {
-    const item = parsedFileData[i];
+  for (let index = 0; index < parsedFileData.length; index++) {
+    const element = parsedFileData[index];
+    const find = textareaData.find(f => f.number === element.number);
 
-    const found = textareaData.find(f => f.number === item.number);
-
-    if (!found) {
-      del.push({ ...item, updated: "del" });
-      continue;
+    if (!find) {
+      del.push({ ...element, updated: "del" });
     }
   }
 
@@ -287,7 +283,6 @@ function parseData() {
     const item = textareaData[o];
 
     const found = parsedFileData.find(f => f.number === item.number);
-
     if (!found) {
       add.push({ ...item, updated: "add" });
       continue;
