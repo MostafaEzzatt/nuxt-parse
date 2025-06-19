@@ -58,7 +58,7 @@ export const useSpecialMealStore = defineStore("useSpecialMealStore", () => {
             mealType = "vgml";
             break;
           case "vjml":
-            mealType = "vgml";
+            mealType = "jin";
             break;
 
           default:
